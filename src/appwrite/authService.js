@@ -1,7 +1,7 @@
 import { Client, Account, ID } from "appwrite";
 import { config } from "../config/config";
 
-class AuthService {
+export class AuthService {
   // this class has 2 properties (instance variables)
   client;
   account;
@@ -45,8 +45,9 @@ class AuthService {
 
   async getAccount() {
     try {
-      return this.account.get();
+      return await this.account.get();
     } catch (error) {
+      // console.log("Appwrite :: getAccount :: error : ", error);
       throw error;
     }
   }
