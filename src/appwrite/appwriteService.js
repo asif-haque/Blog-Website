@@ -122,3 +122,5 @@ class Service {
     return storage.getFilePreview(config.appwriteBucketId, fileId);
   }
 }
+
+export const appWriteService = new Service();

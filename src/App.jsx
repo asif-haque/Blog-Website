@@ -4,6 +4,7 @@ import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
 import { useDispatch } from "react-redux";
 import { login, logout } from "./store/authSlice";
+import Login from "./components/Login";
 
 function App() {
   /* fetching data: 
@@ -40,7 +41,9 @@ function App() {
       <header>
         <Header />
       </header>
-      <main>Inside Main</main>
+      <main>Inside Main
+        <Login />
+      </main>
       <footer>
         <Footer />
       </footer>
