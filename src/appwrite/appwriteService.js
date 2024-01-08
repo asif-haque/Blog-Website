@@ -4,7 +4,7 @@ import { config } from "../config/config";
 class Service {
   client;
   databases;
-  storage;
+  bucket;
 
   constructor() {
     this.client = new Client();
@@ -12,8 +12,10 @@ class Service {
       .setEndpoint(config.appwriteUrl)
       .setProject(config.appwriteProjectId);
     this.databases = new Databases(this.client);
-    this.storage = new Storage(this.client);
+    this.bucket = new Storage(this.client);
   }
+  // These are only some of the services, I can choose the service (methods) from the
+  // docs according to my need.
 
   async createBlog({ title, slug, content, featuredImg, status, userId }) {
     try {
@@ -44,16 +46,18 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite :: getBlog :: error : ", error);
+      return false;
     }
   }
 
   async getBlogs() {
     try {
       // we have to use query to filter all the documents with active status (our index) while fetching from DB
+      // Query is used to ask for specified data from the database
       return await databases.listDocuments(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
-        [Query.equal("status", true)]
+        [Query.equal("status", true)] // as an array
       );
     } catch (error) {}
   }
@@ -85,31 +89,31 @@ class Service {
         config.appwriteCollectionId,
         slug
       );
-      return true;
+      return true; // manual return 
     } catch (error) {
       console.log("Appwrite :: deleteBlog :: error : ", error);
       return false;
     }
   }
 
-  // FILE HANDLING IN STORAGE
-  async createTheFile(file) {
+  // FILE HANDLING IN STORAGE : any image or file uploaded in the app
+  async uploadFile(file) {
     try {
       // this returns an id for the file, used in delete or update
-      return await storage.createFile(
+      return await this.bucket.createFile(
         config.appwriteBucketId,
         ID.unique(),
         file
       );
     } catch (error) {
-      console.log("Appwrite :: createTheFile :: error : ", error);
+      console.log("Appwrite :: uploadFile :: error : ", error);
       return false;
     }
   }
 
   async deleteTheFile(fileId) {
     try {
-      await storage.deleteFile(config.appwriteBucketId, fileId);
+      await this.bucket.deleteFile(config.appwriteBucketId, fileId);
       return true;
     } catch (error) {
       console.log("Appwrite :: deleteTheFile :: error : ", error);
@@ -117,9 +121,10 @@ class Service {
     }
   }
 
-  // not async, this is a  fast method
+  // not async, this is a fast method
+  // this is an important feature to make the web app fast
   getTheFilePreview(fileId) {
-    return storage.getFilePreview(config.appwriteBucketId, fileId);
+    return this.bucket.getFilePreview(config.appwriteBucketId, fileId).href;  // returning the href prop
   }
 }
 

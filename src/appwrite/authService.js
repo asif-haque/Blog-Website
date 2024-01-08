@@ -5,7 +5,8 @@ export class AuthService {
   // this class has 2 properties (instance variables)
   client;
   account;
-  // putting the code inside constructor, so that whenver object gets created, this code run
+  // putting the code inside constructor, so that whenever object gets created, this code run
+  // for every auth service, the following code is repeated. That's why the class.
   constructor() {
     this.client = new Client()
       .setEndpoint(config.appwriteUrl)
@@ -18,7 +19,7 @@ export class AuthService {
       const acc = await this.account.create(ID.unique(), email, password, name);
       if (acc) {
         // if account is created, call login to directly put the user in the logged in state
-        login(email, password);
+        return this.login(email, password);
       } else {
         return acc; // we will handle the null account later
       }
