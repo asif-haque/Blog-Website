@@ -7,12 +7,17 @@ export default function LogoutBtn() {
   const dispatch = useDispatch();
   const handleLogout = () => {
     authService.logout().then(() => {
-      dispatch(logout());
+      dispatch(logout()); //setting status false through dispatch of an action
     });
   };
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <button
+        onClick={handleLogout}
+        className="inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full"
+      >
+        Logout
+      </button>
     </div>
   );
 }

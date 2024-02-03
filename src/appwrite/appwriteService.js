@@ -17,44 +17,44 @@ class Service {
   // These are only some of the services, I can choose the service (methods) from the
   // docs according to my need.
 
-  async createBlog({ title, slug, content, featuredImg, status, userId }) {
+  async createPost({ title, slug, content, featuredImg, status, userId }) {
     try {
-      return await databases.createDocument(
+      return await this.databases.createDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug,
         {
           title,
           content,
-          featuredImg,
+          featuredImg, // actually featuredImgId => got from createFile()
           status,
           userId,
         }
       );
     } catch (error) {
-      console.log("Appwrite :: createBlog :: error : ", error);
+      console.log("Appwrite :: createPost :: error : ", error);
     }
   }
 
-  async getBlog(slug) {
+  async getPost(slug) {
     // Get a document by its unique ID. This endpoint response returns a JSON object with the document data.
     try {
-      return await databases.getDocument(
+      return await this.databases.getDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug
       );
     } catch (error) {
-      console.log("Appwrite :: getBlog :: error : ", error);
+      console.log("Appwrite :: getPost :: error : ", error);
       return false;
     }
   }
 
-  async getBlogs() {
+  async getPosts() {
     try {
       // we have to use query to filter all the documents with active status (our index) while fetching from DB
       // Query is used to ask for specified data from the database
-      return await databases.listDocuments(
+      return await this.databases.listDocuments(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         [Query.equal("status", true)] // as an array
@@ -62,10 +62,10 @@ class Service {
     } catch (error) {}
   }
 
-  async updateBlog(slug, { title, content, featuredImg, status }) {
+  async updatePost(slug, { title, content, featuredImg, status }) {
     // Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
     try {
-      await databases.updateDocument(
+      await this.databases.updateDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug,
@@ -78,20 +78,20 @@ class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite :: updateBlog :: error : ", error);
+      console.log("Appwrite :: updatePost :: error : ", error);
     }
   }
 
-  async deleteBlog(slug) {
+  async deletePost(slug) {
     try {
-      await databases.deleteDocument(
+      await this.databases.deleteDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug
       );
-      return true; // manual return 
+      return true; // manual return
     } catch (error) {
-      console.log("Appwrite :: deleteBlog :: error : ", error);
+      console.log("Appwrite :: deletePost :: error : ", error);
       return false;
     }
   }
@@ -124,7 +124,8 @@ class Service {
   // not async, this is a fast method
   // this is an important feature to make the web app fast
   getTheFilePreview(fileId) {
-    return this.bucket.getFilePreview(config.appwriteBucketId, fileId).href;  // returning the href prop
+    // fileId is the ID of the post.featuredImg
+    return this.bucket.getFilePreview(config.appwriteBucketId, fileId).href; // returning the href prop
   }
 }
 

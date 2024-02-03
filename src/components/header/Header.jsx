@@ -17,20 +17,26 @@ export default function Header() {
     { name: "Add Post", url: "/add-post", show: status },
   ];
   return (
-    <header>
+    <header className="py-3 shadow bg-gray-500">
       <Container>
-        <nav>
-          <div>
-            <Logo />
+        <nav className="flex">
+          <div className="mr-4">
+            <Logo width="70px" />
           </div>
-          <ul>
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <button onClick={() => navigate(item.url)}>
-                  {item.show && item.name}
-                </button>
-              </li>
-            ))}
+          <ul className="flex ml-auto">
+            {navItems.map(
+              (item) =>
+                item.show && (
+                  <li key={item.name}>
+                    <button
+                      onClick={() => navigate(item.url)}
+                      className="inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full"
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                )
+            )}
             {status && (
               <li>
                 <Logoutbtn /> {/* as this has no url, written seperately */}

@@ -47,11 +47,6 @@ function App() {
       <header>
         <Header />
       </header>
-      <main>
-        Inside Main
-        {/* <Login /> */}
-      </main>
-      <footer>{/* <Footer /> */}</footer>
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -98,12 +93,14 @@ function App() {
         <Route
           path="/post/:slug"
           element={
-            // <Protected authentication>
-            <Post /> // I want someone to read a blog with or without authentication
-            // </Protected>
+            <Protected authentication>
+              <Post />
+              {/* But I want someone to read a blog with or without authentication */}
+            </Protected>
           }
         />
       </Routes>
+      <footer>{/* <Footer /> */}</footer>
     </>
   );
 }

@@ -1,8 +1,9 @@
 import React, { forwardRef, useId } from "react";
 
 // forwardRef is used to handle the input data from any position of the component heirarchy
+// to use forwardRef: forwardRef(functionName(props, ref))
 
-const Button = ({ label, type = "text", className = "", ...props }, ref) => {
+const Input = ({ label, type = "text", className = "", ...props }, ref) => {
   const id = useId();
   return (
     <>
@@ -18,4 +19,4 @@ const Button = ({ label, type = "text", className = "", ...props }, ref) => {
   );
 };
 
-export default forwardRef(Button);
+export default forwardRef(Input);
