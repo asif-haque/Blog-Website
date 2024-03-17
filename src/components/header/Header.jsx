@@ -1,13 +1,14 @@
 import Container from "../container/Container";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
 import Logoutbtn from "./LogoutBtn";
 import Logo from "../Logo";
+import "./Header.css";
 
 export default function Header() {
+  const [show, setShow] = useState(true);
   const status = useSelector((state) => state.auth.status);
-  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", url: "/", show: true },
@@ -16,24 +17,40 @@ export default function Header() {
     { name: "All Posts", url: "/all-posts", show: status },
     { name: "Add Post", url: "/add-post", show: status },
   ];
+  //  we want to show the bar whenever scrolling up
+  let oldScrollY = window.scrollY;
+  window.onscroll = () => {
+    const newScrollY = window.scrollY;
+    if (newScrollY > oldScrollY) {
+      setShow(false);
+    }
+    if (newScrollY < oldScrollY) {
+      setShow(true);
+    }
+    oldScrollY = newScrollY;
+  };
   return (
-    <header className="py-3 shadow bg-gray-500">
+    <header
+      className={`py-3 bg-[rgba(255,255,255,0.3)] backdrop-blur-sm fixed z-50 w-full top-0 ${
+        show === false && `hide`
+      }`}
+    >
       <Container>
         <nav className="flex">
           <div className="mr-4">
             <Logo width="70px" />
           </div>
-          <ul className="flex ml-auto">
+          <ul className="flex ml-auto gap-10">
             {navItems.map(
               (item) =>
                 item.show && (
                   <li key={item.name}>
-                    <button
-                      onClick={() => navigate(item.url)}
-                      className="inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full"
+                    <NavLink
+                      to={item.url}
+                      className="h-full w-full flex justify-center items-center"
                     >
                       {item.name}
-                    </button>
+                    </NavLink>
                   </li>
                 )
             )}

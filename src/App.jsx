@@ -14,6 +14,8 @@ import AllPosts from "./pages/AllPosts";
 import AddPost from "./pages/AddPost";
 import EditPost from "./pages/EditPost";
 import Post from "./pages/Post";
+import Loading from "./components/Loading";
+import PostCardShimmer from "./components/PostCardShimmer";
 
 function App() {
   /* fetching data: 
@@ -21,7 +23,6 @@ function App() {
       2. error is already provided
       3. for loading, gotta use useState 
   */
-  // const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -36,16 +37,16 @@ function App() {
           dispatch(logout()); // if the user not found, stay logged out
         }
       })
-      // .catch((error) => {
-      //   setError(error);
-      // })
       .finally(() => setLoading(false));
   }, []);
+
   return (
-    <>
-      {loading && <h1>Loading...</h1>}
+    <div className="min-h-screen">
+      <Loading loading={loading} />
+
       <header>
         <Header />
+        <div className="h-[12vh]"></div>
       </header>
 
       <Routes>
@@ -100,8 +101,8 @@ function App() {
           }
         />
       </Routes>
-      <footer>{/* <Footer /> */}</footer>
-    </>
+      
+    </div>
   );
 }
 

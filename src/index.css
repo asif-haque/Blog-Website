@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+}
+
+/* had to include here due to get recognized by react router dom [for NavLink] */
+.active {
+  border-bottom: 2px solid black;
+}

@@ -11,13 +11,11 @@ export default function LogoutBtn() {
     });
   };
   return (
-    <div>
-      <button
-        onClick={handleLogout}
-        className="inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full"
-      >
-        Logout
-      </button>
-    </div>
+    <button
+      onClick={handleLogout}
+      className="h-full w-full flex justify-center items-center px-3 hover:shadow"
+    >
+      Logout
+    </button>
   );
 }

@@ -43,9 +43,9 @@ export default function LoginComponent() {
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
         <div className="mb-2 flex justify-center">
-          <span className="inline-block w-full max-w-[100px]">
-            <Logo width="100%" />
-          </span>
+        <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+            <Logo />
+          </div>
         </div>
         <h2 className="text-center text-2xl font-bold leading-tight">
           Sign in to your account
@@ -100,7 +100,7 @@ export default function LoginComponent() {
                 </p>
               )}
             </div>
-            <Button className="w-full" type="submit">
+            <Button className="w-full bg-gray-800" type="submit">
               Sign in
             </Button>
           </div>

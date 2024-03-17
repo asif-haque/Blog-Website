@@ -1,0 +1,28 @@
+/* index holds its value for 7 sec. That 7 sec, I divided into 3 parts:
+    1. 0-20% : image comes from below
+    2. 20-80% : when the image stays still
+    3. 80-100% : image goes back
+*/
+
+.show {
+  animation: moveUp ease-in-out 7s; /* duration is syncronised with the setTimeout value */
+}
+
+@keyframes moveUp {
+  0% {
+    transform: translateY(100%);
+  }
+  10%,
+  90% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px black; /* Adjust the width and color of the outline as needed */
+  -webkit-text-fill-color: white; /* Make the text transparent */
+  color: white; /* Fill color of the text */
+}
