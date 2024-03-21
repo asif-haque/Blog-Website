@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function Protected({ children, authentication = true }) {
-  const [loading, setLoading] = useState(true);
   // getting status (authentication status) state var from redux store
   const status = useSelector((state) => state.auth.status);
 
@@ -23,8 +22,7 @@ export default function Protected({ children, authentication = true }) {
     else if (!authentication && status) {
       navigator("/");
     }
-    setLoading(false);
   }, [status, navigator, authentication]);
 
-  return loading ? "Loading..." : <div>{children}</div>;
+  return <div>{children}</div>;
 }

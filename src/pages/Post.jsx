@@ -10,6 +10,7 @@ import Button from "../components/Button";
 
 export default function Post() {
   const [post, setPost] = useState(null); // to make it accessable throughout the function
+  const [open, setOpen] = useState(false);
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -34,9 +35,24 @@ export default function Post() {
   };
 
   return post ? (
-    <div className="py-8">
+    <div className="px-48">
       <Container>
-        <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+        <h1 className="text-5xl font-bold mb-5">{post.title} </h1>
+        <h3 className="text-lg mb-3">{post.userName}</h3>
+        <div className="border-t border-b flex items-center p-2 mb-5 relative">
+          {isAuthor && (
+            <span
+              className="material-symbols-outlined text-zinc-700 ml-auto cursor-pointer"
+              onClick={() => setOpen(!open)}
+            >
+              more_horiz
+            </span>
+          )}
+          {open && (
+            <div className="w-52 bg-slate-200 absolute right-0 top-10">a</div>
+          )}
+        </div>
+        <div className="w-full flex justify-center mb-4 relative rounded-xl p-2">
           {/* Image */}
           {post.featuredImg && (
             <img
@@ -62,10 +78,9 @@ export default function Post() {
         <div>
           {/* Post */}
           <div className="w-full mb-6">
-            <h1 className="text-2xl font-bold">{post.title} </h1>
             <div className="browser-css">
               {parse(post.content)}
-              {/* content is stored in html format => "<p>para</>" */}
+              {/* content is stored in html format => "<p>para</p>" */}
             </div>
           </div>
         </div>

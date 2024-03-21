@@ -60,6 +60,7 @@ export default function PostForm({ post }) {
         ...data,
         featuredImg: file ? file.$id : undefined,
         userId: userData.$id,
+        userName: userData.name,
         status: data.status === "active" ? true : false,
       });
       dbPost && navigate(`/post/${dbPost.$id}`);

@@ -15,7 +15,7 @@ export default function Header() {
     { name: "Login", url: "/login", show: !status },
     { name: "Signup", url: "/signup", show: !status },
     { name: "All Posts", url: "/all-posts", show: status },
-    { name: "Add Post", url: "/add-post", show: status },
+    { name: "Write", url: "/add-post", show: status },
   ];
   //  we want to show the bar whenever scrolling up
   let oldScrollY = window.scrollY;
@@ -49,6 +49,11 @@ export default function Header() {
                       to={item.url}
                       className="h-full w-full flex justify-center items-center"
                     >
+                      {item.name === "Write" && (
+                        <span className="material-symbols-outlined mr-1">
+                          edit_square
+                        </span>
+                      )}
                       {item.name}
                     </NavLink>
                   </li>

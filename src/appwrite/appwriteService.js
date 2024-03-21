@@ -14,10 +14,17 @@ class Service {
     this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
   }
-  // These are only some of the services, I can choose the service (methods) from the
-  // docs according to my need.
 
-  async createPost({ title, slug, content, featuredImg, status, userId }) {
+  // articles collection
+  async createPost({
+    title,
+    slug,
+    content,
+    featuredImg,
+    status,
+    userId,
+    userName,
+  }) {
     try {
       return await this.databases.createDocument(
         config.appwriteDatabaseId,
@@ -29,6 +36,7 @@ class Service {
           featuredImg, // actually featuredImgId => got from createFile()
           status,
           userId,
+          userName,
         }
       );
     } catch (error) {
