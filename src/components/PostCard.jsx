@@ -19,13 +19,13 @@ export default function PostCard({
   return (
     // $id is a variable - dynamic routing
     <Link to={`/post/${$id}`}>
-      <div className="flex gap-3 border-b pb-5">
+      <div className="flex gap-3 border-b pb-10">
         <div className="flex-[1.75]">
           <h2 className="text-2xl font-extrabold mb-2">{title}</h2>
           <div className="line-clamp-3 mb-5 text-neutral-600 text-sm">
             {convert(content)}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             <div className="w-[1.5rem]">
               <img
                 src="/images/userWithoutDp.png"
@@ -33,7 +33,7 @@ export default function PostCard({
                 alt=""
               />
             </div>
-            <h3 className="text-md">{userName}</h3>
+            <h3 className="text-md ml-2">{userName}</h3>
             <LuDot className="opacity-70" />
             <div className="text-sm opacity-70">
               {readCount(content)} min read

@@ -21,7 +21,7 @@ export default function Header() {
   let oldScrollY = window.scrollY;
   window.onscroll = () => {
     const newScrollY = window.scrollY;
-    if (newScrollY > oldScrollY) {
+    if (newScrollY > oldScrollY && oldScrollY > 150) {
       setShow(false);
     }
     if (newScrollY < oldScrollY) {
