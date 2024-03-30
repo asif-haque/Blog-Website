@@ -15,7 +15,7 @@ class Service {
     this.bucket = new Storage(this.client);
   }
 
-  // articles collection
+  // Articles Collection
   async createPost({
     title,
     slug,

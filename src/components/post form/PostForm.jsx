@@ -50,37 +50,44 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   // console.log("Userdata :: ", userData);
   const submit = async (data) => {
-    if (!post) {
-      // upload image to storage
-      const file = data.image[0]
-        ? await appWriteService.uploadFile(data.image[0])
-        : null;
-      // create post with the form data
-      const dbPost = await appWriteService.createPost({
-        ...data,
-        featuredImg: file ? file.$id : undefined,
-        userId: userData.$id,
-        userName: userData.name,
-        status: data.status === "active" ? true : false,
-      });
-      dbPost && navigate(`/post/${dbPost.$id}`);
-    } else {
-      // for edit form
-      // upload new image
-      const file = data.image[0]
-        ? await appWriteService.uploadFile(data.image[0])
-        : null;
-      // delete old image
-      file &&
-        post.featuredImg &&
-        (await appWriteService.deleteTheFile(post.featuredImg));
-      // update post
-      const dbPost = await appWriteService.updatePost(post.$id, {
-        ...data,
-        featuredImg: file ? file.$id : undefined,
-        status: data.status === "active" ? true : false,
-      });
-      dbPost && navigate(`/post/${dbPost.$id}`);
+    try {
+      if (!post) {
+        // upload image to storage
+        const file = data.image[0]
+          ? await appWriteService.uploadFile(data.image[0])
+          : null;
+        // create post with the form data
+        const dbPost = await appWriteService.createPost({
+          ...data,
+          featuredImg: file ? file.$id : undefined,
+          userId: userData.$id,
+          userName: userData.name,
+          status: data.status === "active" ? true : false,
+        });
+        dbPost && navigate(`/post/${dbPost.$id}`);
+      } else {
+        // Edit Form
+        // upload new image
+        const file = data.image[0]
+          ? await appWriteService.uploadFile(data.image[0])
+          : null;
+        // delete old image if there's a new image
+        if (file && post.featuredImg) {
+          await appWriteService.deleteTheFile(post.featuredImg);
+        }
+        // update post
+        const dbPost = await appWriteService.updatePost(post.$id, {
+          ...data,
+          featuredImg: file ? file.$id : undefined,
+          status: data.status === "active" ? true : false,
+        });
+        if (dbPost) {
+          console.log("Reached");
+          navigate(`/post/${dbPost.$id}`);
+        }
+      }
+    } catch (err) {
+      console.log("Error in creating or updating post : ", err);
     }
   };
 

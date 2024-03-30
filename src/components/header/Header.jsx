@@ -33,7 +33,7 @@ export default function Header() {
     <header
       className={`py-3 bg-[rgba(255,255,255,0.3)] backdrop-blur-sm fixed z-50 w-full top-0 ${
         show === false && `hide`
-      }`}
+      } border-b`}
     >
       <Container>
         <nav className="flex">
