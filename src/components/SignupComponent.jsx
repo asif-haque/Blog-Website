@@ -25,6 +25,7 @@ export default function SignupComponent() {
       if (session) {
         const userData = authService.getAccount();
         if (userData) {
+          console.log("Signed Up!");
           dispatch(login(userData));
           navigate("/");
         }

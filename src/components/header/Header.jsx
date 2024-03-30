@@ -40,17 +40,17 @@ export default function Header() {
           <div className="mr-4">
             <Logo width="70px" />
           </div>
-          <ul className="flex ml-auto gap-10">
+          <ul className="flex items-center ml-auto gap-10">
             {navItems.map(
               (item) =>
                 item.show && (
                   <li key={item.name}>
                     <NavLink
                       to={item.url}
-                      className="h-full w-full flex justify-center items-center"
+                      className="py-2 flex justify-center items-center opacity-70 hover:opacity-100"
                     >
                       {item.name === "Write" && (
-                        <span className="material-symbols-outlined mr-1">
+                        <span className="material-symbols-outlined mr-2">
                           edit_square
                         </span>
                       )}
