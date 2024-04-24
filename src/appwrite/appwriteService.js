@@ -58,22 +58,47 @@ class Service {
     }
   }
 
-  async getPosts() {
+  async getPosts(searchTerm = "") {
     try {
       // we have to use query to filter all the documents with active status (our index) while fetching from DB
       // Query is used to ask for specified data from the database
-      return await this.databases.listDocuments(
-        config.appwriteDatabaseId,
-        config.appwriteCollectionId,
-        [Query.equal("status", true)] // as an array
-      );
-    } catch (error) {}
+      if (searchTerm === "")
+        return await this.databases.listDocuments(
+          config.appwriteDatabaseId,
+          config.appwriteCollectionId,
+          [Query.equal("status", [true])]
+        );
+      else {
+        const docsWithTitle = await this.databases.listDocuments(
+          config.appwriteDatabaseId,
+          config.appwriteCollectionId,
+          [Query.equal("status", true), Query.search("title", searchTerm)]
+        );
+        const docsWithAuthor = await this.databases.listDocuments(
+          config.appwriteDatabaseId,
+          config.appwriteCollectionId,
+          [Query.equal("status", true), Query.search("userName", searchTerm)]
+        );
+        const docs = {
+          total: 0,
+          documents: [],
+        };
+        docs.total = docsWithAuthor.total + docsWithTitle.total;
+        docs.documents = [
+          ...docsWithTitle.documents,
+          ...docsWithAuthor.documents,
+        ];
+        return docs; // JUST BECAUSE F-ING Query.or([]) DOESN'T WORK WITH APPWRITE
+      }
+    } catch (error) {
+      console.log("Error fetching documents : ", error);
+    }
   }
 
   async updatePost(slug, { title, content, featuredImg, status }) {
     // Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
     try {
-      await this.databases.updateDocument(
+      return await this.databases.updateDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug,

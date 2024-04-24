@@ -1,14 +1,25 @@
 import Container from "../container/Container";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  Navigate,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Logoutbtn from "./LogoutBtn";
 import Logo from "../Logo";
 import "./Header.css";
+import { CiSearch } from "react-icons/ci";
+import { IoIosClose } from "react-icons/io";
 
 export default function Header() {
   const [show, setShow] = useState(true);
+  const [search, setSearch] = useState("");
   const status = useSelector((state) => state.auth.status);
+  const navigate = useNavigate();
+  const inputRef = useRef();
 
   const navItems = [
     { name: "Home", url: "/", show: true },
@@ -17,6 +28,23 @@ export default function Header() {
     { name: "All Posts", url: "/all-posts", show: status },
     { name: "Write", url: "/add-post", show: status },
   ];
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    // make a query to the DB
+    const searchTerm = search.trim();
+    if (searchTerm) {
+      navigate(`/search?q=${searchTerm}`);
+      inputRef.current.blur();
+    }
+  };
+
+  useEffect(() => {
+    if (!location.href.includes("/search")) {
+      setSearch("");
+    }
+  }, [location.href]);
+
   //  we want to show the bar whenever scrolling up
   let oldScrollY = window.scrollY;
   window.onscroll = () => {
@@ -36,9 +64,27 @@ export default function Header() {
       } border-b`}
     >
       <Container>
-        <nav className="flex">
-          <div className="mr-4">
+        <nav className="flex items-center">
+          <div className="mr-7">
             <Logo width="70px" />
+          </div>
+          <div className="relative">
+            <form onSubmit={handleSearch}>
+              <input
+                className="bg-neutral-100 rounded-full h-[35px] min-w-[80px] outline-none px-9"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                ref={inputRef}
+              />
+            </form>
+            <CiSearch className="text-lg absolute left-3 top-1/2 -translate-y-1/2" />
+            {search && (
+              <IoIosClose
+                className="text-3xl absolute right-2 top-1/2 -translate-y-1/2 text-neutral-600 cursor-pointer"
+                onClick={() => setSearch("")}
+              />
+            )}
           </div>
           <ul className="flex items-center ml-auto gap-10">
             {navItems.map(

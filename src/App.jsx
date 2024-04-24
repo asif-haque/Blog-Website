@@ -15,7 +15,7 @@ import AddPost from "./pages/AddPost";
 import EditPost from "./pages/EditPost";
 import Post from "./pages/Post";
 import Loading from "./components/Loading";
-import PostCardShimmer from "./components/PostCardShimmer";
+import Search from "./pages/Search";
 
 function App() {
   /* fetching data: 
@@ -100,8 +100,16 @@ function App() {
             </Protected>
           }
         />
+        <Route
+          path="/search"
+          element={
+            <Protected authentication>
+              <Search />
+              {/* But I want someone to read a blog with or without authentication */}
+            </Protected>
+          }
+        />
       </Routes>
-      
     </div>
   );
 }

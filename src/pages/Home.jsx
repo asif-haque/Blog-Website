@@ -29,9 +29,11 @@ export default function Home() {
   const headings = ["Write Blogs.", "Make a diary.", "Learn. Educate."];
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIndex((index + 1) % images.length);
-    }, 7 * 1000);
+    const timer =
+      !authStatus &&
+      setTimeout(() => {
+        setIndex((index + 1) % images.length);
+      }, 7 * 1000);
     return () => clearTimeout(timer);
   }, [index]);
 

@@ -4,22 +4,32 @@ import { appWriteService } from "../appwrite/appwriteService";
 import PostCard from "../components/PostCard";
 import Container from "../components/container/Container";
 import PostCardShimmer from "../components/PostCardShimmer";
+import { useSearchParams } from "react-router-dom";
 
-export default function AllPosts() {
+function AllPosts({ searchTerm = "" }) {
   const [posts, setposts] = useState();
   const loading = [1, 2, 3, 4];
+
   useEffect(() => {
     const fn = async () => {
-      const documentList = await appWriteService.getPosts(); // has two keys - total and documents
+      const documentList = await appWriteService.getPosts(searchTerm);
       documentList && setposts(documentList.documents);
     };
     fn();
-  }, []);
+  }, [searchTerm]);
 
   return posts ? (
     posts.length ? (
       <div className="w-full py-8 px-[13vw]">
         <Container>
+          {searchTerm && (
+            <>
+              <h1 className="text-4xl font-extrabold text-center mb-5 line-clamp-1">
+                Results for "{searchTerm}"
+              </h1>
+              <p className="text-sm mb-3">Search Results: {posts.length}</p>
+            </>
+          )}
           <div className="space-y-5">
             {posts.toReversed().map((post) => (
               <div key={post.$id} className="">
@@ -31,12 +41,16 @@ export default function AllPosts() {
       </div>
     ) : (
       <>
-        <h1 className="text-4xl font-extrabold text-center my-7">
-          Welcome to the Website!
+        <h1 className="text-4xl font-extrabold text-center my-7 line-clamp-1">
+          {searchTerm
+            ? `No Result Found for "${searchTerm}"`
+            : `Welcome to the Website!`}
         </h1>
-        <h3 className="text-3xl font-semibold text-center my-7">
-          Be the first one to register a blog on the site!
-        </h3>
+        {!searchTerm && (
+          <h3 className="text-3xl font-semibold text-center my-7">
+            Be the first one to register a blog on the site!
+          </h3>
+        )}
       </>
     )
   ) : (
@@ -54,3 +68,5 @@ export default function AllPosts() {
     </div>
   );
 }
+
+export default React.memo(AllPosts);

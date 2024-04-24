@@ -48,7 +48,6 @@ export default function PostForm({ post }) {
 
   const userData = useSelector((state) => state.auth.userData);
   const navigate = useNavigate();
-  // console.log("Userdata :: ", userData);
   const submit = async (data) => {
     try {
       if (!post) {
@@ -81,6 +80,7 @@ export default function PostForm({ post }) {
           featuredImg: file ? file.$id : undefined,
           status: data.status === "active" ? true : false,
         });
+
         if (dbPost) {
           console.log("Reached");
           navigate(`/post/${dbPost.$id}`);
@@ -153,7 +153,7 @@ export default function PostForm({ post }) {
             options={["active", "inactive"]}
             label="Status : "
             className="mb-4"
-            {...register("status", { required: true })}
+            {...register("status", { required: { value: true, message } })}
           />
           {/* submit button */}
           <Button type="submit" className="w-full">
