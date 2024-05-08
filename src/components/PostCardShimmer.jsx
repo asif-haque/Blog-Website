@@ -15,7 +15,7 @@ const PostCardShimmer = () => {
             <div className="w-[7rem] h-[0.75rem] bg-gray-300 rounded-xl" />
           </div>
         </div>
-        <div className="flex-[0.25] h-[7rem] bg-gray-300 rounded-xl mt-2" />
+        <div className="flex-1 h-[7rem] bg-gray-300 rounded-xl mt-2" />
       </div>
     </div>
   );

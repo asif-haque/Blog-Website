@@ -20,7 +20,7 @@ function AllPosts({ searchTerm = "" }) {
 
   return posts ? (
     posts.length ? (
-      <div className="w-full py-8 px-[13vw]">
+      <div className="w-full py-8 px-4 md:px-[13vw]">
         <Container>
           {searchTerm && (
             <>

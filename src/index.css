@@ -9,6 +9,6 @@
 }
 
 /* had to include here due to get recognized by react router dom [for NavLink] */
-.active {
+/* .active {
   border-bottom: 2px solid black;
-}
+} */

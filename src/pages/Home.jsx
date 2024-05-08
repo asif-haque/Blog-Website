@@ -1,11 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { appWriteService } from "../appwrite/appwriteService";
-import PostCard from "../components/PostCard";
-import Container from "../components/container/Container";
 import AllPosts from "./AllPosts";
-import { motion, AnimatePresence } from "framer-motion";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
@@ -47,7 +43,7 @@ export default function Home() {
               <h1
                 className={`${
                   index !== i && `hidden`
-                } absolute top-[50%] -translate-y-1/2 text-9xl z-40 text-center w-full font-bold text-outline`}
+                } absolute top-[50%] -translate-y-1/2 w-[95%] md:w-full text-7xl md:text-9xl z-40 text-center font-bold text-outline`}
               >
                 {headings[i]}
               </h1>

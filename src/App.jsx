@@ -46,7 +46,7 @@ function App() {
 
       <header>
         <Header />
-        <div className="h-[12vh]"></div>
+        <div className="h-[11vh]"></div>
       </header>
 
       <Routes>

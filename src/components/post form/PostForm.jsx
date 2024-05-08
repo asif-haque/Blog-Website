@@ -155,6 +155,7 @@ export default function PostForm({ post }) {
             className="mb-4"
             {...register("status", { required: { value: true, message } })}
           />
+          {/* <Input /> to add topics */}
           {/* submit button */}
           <Button type="submit" className="w-full">
             {post ? `Update` : `Submit`}

@@ -5,7 +5,8 @@
 */
 
 .show {
-  animation: moveUp ease-in-out 7s; /* duration is syncronised with the setTimeout value */
+  animation: moveUp ease-in-out 7.1s; /* duration is syncronised with the setTimeout value. 
+  Increased the time a bit, so the jerking of image is gone, as the change of image (index) is happening while the div is going down and not when the animation stops for that split second */
 }
 
 @keyframes moveUp {

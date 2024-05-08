@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { appWriteService } from "../appwrite/appwriteService";
-import parse from "html-react-parser";
 import { convert } from "html-to-text";
 import { readCount } from "../utils/readCount";
 import { LuDot } from "react-icons/lu";
@@ -19,10 +18,10 @@ export default function PostCard({
   return (
     // $id is a variable - dynamic routing
     <Link to={`/post/${$id}`}>
-      <div className="flex gap-3 border-b pb-10">
+      <div className="flex gap-3 border-b pb-7 md:pb-10">
         <div className="flex-[1.75]">
           <h2 className="text-2xl font-extrabold mb-2">{title}</h2>
-          <div className="line-clamp-3 mb-5 text-neutral-600 text-sm">
+          <div className="line-clamp-2 md:line-clamp-3 mb-5 text-neutral-600 text-sm">
             {convert(content)}
           </div>
           <div className="flex items-center gap-1">
@@ -41,7 +40,7 @@ export default function PostCard({
           </div>
         </div>
         {featuredImg && (
-          <div className="flex-[0.25] h-[7rem] rounded-xl justify-center mt-2 overflow-hidden ">
+          <div className="flex-[0.8] md:flex-[0.25] h-[6rem] md:h-[7rem] rounded-xl justify-center mt-2 overflow-hidden ">
             <img
               src={appWriteService.getTheFilePreview(featuredImg)}
               alt="preview image"
