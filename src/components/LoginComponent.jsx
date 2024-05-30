@@ -23,7 +23,7 @@ export default function LoginComponent() {
     setError("");
     // 1. login to the account through appwrite
     try {
-      const session = await authService.login(data);
+      const session = await authService.login(data); // session is the token, not userData
       // 2. Get the userdata and dispatch to the store and get them on home page
       if (session) {
         const userData = await authService.getAccount();
@@ -43,7 +43,7 @@ export default function LoginComponent() {
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
         <div className="mb-2 flex justify-center">
-        <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+          <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
             <Logo />
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function LoginComponent() {
               )}
             </div>
             <Button className="w-full bg-gray-800" type="submit">
-              Sign in
+              Login
             </Button>
           </div>
         </form>

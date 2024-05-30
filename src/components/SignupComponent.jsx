@@ -23,7 +23,7 @@ export default function SignupComponent() {
     try {
       const session = await authService.signUp(data);
       if (session) {
-        const userData = authService.getAccount();
+        const userData = await authService.getAccount();
         if (userData) {
           console.log("Signed Up!");
           dispatch(login(userData));
@@ -31,7 +31,7 @@ export default function SignupComponent() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      setError("Error from sign in: " + error.message);
     }
   };
 
@@ -107,7 +107,7 @@ export default function SignupComponent() {
               )}
             </div>
             <Button className="w-full bg-gray-800" type="submit">
-              Sign in
+              Sign Up
             </Button>
           </div>
         </form>

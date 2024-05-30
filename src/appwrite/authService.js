@@ -1,5 +1,6 @@
 import { Client, Account, ID } from "appwrite";
 import { config } from "../config/config";
+import { appWriteService } from "./appwriteService";
 
 export class AuthService {
   // this class has 2 properties (instance variables)
@@ -16,14 +17,28 @@ export class AuthService {
 
   async signUp({ name, email, password }) {
     try {
-      const acc = await this.account.create(ID.unique(), email, password, name);
+      const id = ID.unique();
+      
+      const acc = await this.account.create(id, email, password, name);
+      
       if (acc) {
-        // if account is created, call login to directly put the user in the logged in state
-        return this.login(email, password);
+        // First create the session for the signed in user. Beacuse guest scope is not allowed in performing the createUserInfo operation below
+        const session = await this.login({ email, password });
+        
+        const user = await appWriteService.createUserInfo({
+          id: acc.$id,
+          name,
+          email,
+          joinedAt: acc.$createdAt,
+        });
+        
+        if (user) return session;
+        else return user; // as user = null
       } else {
         return acc; // we will handle the null account later
       }
     } catch (error) {
+      console.log("Error in signing in: ", error);
       throw error;
     }
   }
@@ -32,6 +47,7 @@ export class AuthService {
     try {
       return await this.account.createEmailSession(email, password);
     } catch (error) {
+      console.log("Error logging in: ", error);
       throw error;
     }
   }
@@ -48,7 +64,7 @@ export class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
-      // console.log("Appwrite :: getAccount :: error : ", error);
+      console.log("Appwrite :: getAccount :: error : ", error);
       throw error;
     }
   }

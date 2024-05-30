@@ -1,18 +1,18 @@
-// To read individual post
-// Lets the user edit or delete them if it is their post
+// An option to lazy load
+
 import React, { useEffect, useState } from "react";
 import { appWriteService } from "../appwrite/appwriteService";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Container from "../components/container/Container";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
-import Button from "../components/Button";
-import { convert } from "html-to-text";
 import { PiHandsClapping } from "react-icons/pi";
 import { readCount } from "../utils/readCount";
+import { FaHandsClapping } from "react-icons/fa6";
 
 export default function Post() {
   const [post, setPost] = useState(null); // to make it accessable throughout the function
+  const [isPostLiked, setIsPostLiked] = useState(false);
   const [open, setOpen] = useState(false);
   const [readTime, setReadTime] = useState();
   const { slug } = useParams();
@@ -25,15 +25,29 @@ export default function Post() {
 
   // asking for the post details
   useEffect(() => {
-    appWriteService
-      .getPost(slug) // instead of using async-await as an alt
-      .then((post) => (post ? setPost(post) : navigate("/")));
+    console.log(1);
+    appWriteService.getPost(slug).then((post) => {
+      post ? setPost(post) : navigate("/");
+      // checking (on mounting) if post is already liked by the current user
+      if (post?.likes.includes(userData?.$id)) {
+        setIsPostLiked(true);
+      }
+    });
   }, [slug, navigate]);
+
+  // read time calculation on mount
+  useEffect(() => {
+    console.log(1);
+    if (post && post.content) {
+      const t = readCount(post.content);
+      setReadTime(t);
+    }
+  }, [post]);
 
   // checking if the post is of user themselves
   const userData = useSelector((state) => state.auth.userData);
   const isAuthor = post && userData ? post.userId === userData.$id : false;
-  // delete button
+
   const deletePost = async () => {
     try {
       const deleted = await appWriteService.deletePost(post.$id);
@@ -48,15 +62,31 @@ export default function Post() {
     }
   };
 
-  useEffect(() => {
-    if (post && post.content) {
-      const t = readCount(post.content);
-      setReadTime(t);
+  const handleLike = async () => {
+    try {
+      // if the likes doesn't contain current user yet, then add a like
+      if (!post.likes.includes(userData.$id)) {
+        setIsPostLiked(true);
+        const updatedPost = await appWriteService.updatePost(post.$id, {
+          likes: [...post.likes, userData.$id],
+        });
+        setPost(updatedPost);
+      } else {
+        // we'll need to unlike
+        setIsPostLiked(false);
+        const newLikes = post.likes.filter((id) => id !== userData.$id);
+        const updatedPost = await appWriteService.updatePost(post.$id, {
+          likes: newLikes,
+        });
+        setPost(updatedPost);
+      }
+    } catch (err) {
+      console.log("Error liking: ", err);
     }
-  }, [post]);
+  };
 
   return post ? (
-    <div className="px-[20vw]">
+    <div className="px-5 my-5 md:px-[20vw]">
       <Container>
         <h1 className="text-5xl font-bold mb-10">{post.title} </h1>
         <div className="post-info mb-5 flex gap-2">
@@ -73,8 +103,14 @@ export default function Post() {
           </div>
         </div>
         <div className="border-t border-b flex items-center h-12 mb-5 relative">
-          {/* add the filled clap button */}
-          <PiHandsClapping className="text-lg" />
+          {/* Like section */}
+          <button
+            className="text-lg flex gap-2 items-center"
+            onClick={handleLike}
+          >
+            {isPostLiked ? <FaHandsClapping /> : <PiHandsClapping />}
+            {post.likes?.length > 0 && post.likes?.length}
+          </button>
           <div onClick={(e) => e.stopPropagation()} className="ml-auto flex">
             {isAuthor && (
               <span

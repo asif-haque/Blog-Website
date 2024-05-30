@@ -1,4 +1,12 @@
-import { Client, Databases, Storage, Query, ID } from "appwrite";
+import {
+  Client,
+  Databases,
+  Storage,
+  Query,
+  ID,
+  Permission,
+  Role,
+} from "appwrite";
 import { config } from "../config/config";
 
 class Service {
@@ -15,7 +23,28 @@ class Service {
     this.bucket = new Storage(this.client);
   }
 
-  // Articles Collection
+  // UserInfo Collection
+  async createUserInfo({ id, name, email, joinedAt }) {
+    try {
+      console.log("ID of the document: ", id);
+      const user = await this.databases.createDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionUserInfoId,
+        id,
+        {
+          // data
+          name,
+          email,
+          joinedAt,
+        }
+      );
+      return user;
+    } catch (err) {
+      console.log("Error creating user in UserInfo collection: ", err);
+    }
+  }
+
+  // Posts Collection
   async createPost({
     title,
     slug,
@@ -95,20 +124,15 @@ class Service {
     }
   }
 
-  async updatePost(slug, { title, content, featuredImg, status }) {
-    // Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
+  async updatePost(slug, { title, content, featuredImg, status, likes }) {
     try {
       return await this.databases.updateDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug,
-        // the content to be updated, passed as object
-        {
-          title,
-          content,
-          featuredImg,
-          status,
-        }
+        // the content to be updated, passed as object (for optional argument, they are passed as obect)
+        { title, content, featuredImg, status, likes },
+        [Permission.update(Role.any())]
       );
     } catch (error) {
       console.log("Appwrite :: updatePost :: error : ", error);

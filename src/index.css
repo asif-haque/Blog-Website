@@ -8,6 +8,12 @@
   font-family: "Raleway", sans-serif;
 }
 
+a:hover {
+  border-bottom: 1px solid black;
+  transition: all 0.2s ease-in-out;
+  
+}
+
 /* had to include here due to get recognized by react router dom [for NavLink] */
 /* .active {
   border-bottom: 2px solid black;
