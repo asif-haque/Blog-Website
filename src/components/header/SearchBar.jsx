@@ -7,7 +7,7 @@ const SearchBar = ({ handleSearch, search, setSearch, inputRef }) => {
     <div className="relative">
       <form onSubmit={handleSearch}>
         <input
-          className="bg-neutral-100 rounded-full h-[35px] w-[200px] md:w-full outline-none px-9"
+          className="bg-neutral-100 dark:bg-neutral-700 rounded-full h-[35px] w-[150px] md:w-full outline-none px-9"
           placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

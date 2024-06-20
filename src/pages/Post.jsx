@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { PiHandsClapping } from "react-icons/pi";
 import { readCount } from "../utils/readCount";
 import { FaHandsClapping } from "react-icons/fa6";
+import BackButton from "../components/BackButton";
+import toast from "react-hot-toast";
 
 export default function Post() {
   const [post, setPost] = useState(null); // to make it accessable throughout the function
@@ -25,7 +27,6 @@ export default function Post() {
 
   // asking for the post details
   useEffect(() => {
-    console.log(1);
     appWriteService.getPost(slug).then((post) => {
       post ? setPost(post) : navigate("/");
       // checking (on mounting) if post is already liked by the current user
@@ -37,7 +38,6 @@ export default function Post() {
 
   // read time calculation on mount
   useEffect(() => {
-    console.log(1);
     if (post && post.content) {
       const t = readCount(post.content);
       setReadTime(t);
@@ -56,6 +56,7 @@ export default function Post() {
         if (post.featuredImg)
           await appWriteService.deleteTheFile(post.featuredImg);
         navigate("/all-posts");
+        toast("Post deleted.");
       }
     } catch (err) {
       console.log("Error deleting file :: ", err);
@@ -86,8 +87,9 @@ export default function Post() {
   };
 
   return post ? (
-    <div className="px-5 my-5 md:px-[20vw]">
+    <div className="px-5 md:px-10 py-10 lg:px-[20vw]">
       <Container>
+        <BackButton />
         <h1 className="text-5xl font-bold mb-10">{post.title} </h1>
         <div className="post-info mb-5 flex gap-2">
           <div className="w-[3rem]">
@@ -114,22 +116,22 @@ export default function Post() {
           <div onClick={(e) => e.stopPropagation()} className="ml-auto flex">
             {isAuthor && (
               <span
-                className="material-symbols-outlined text-zinc-700 cursor-pointer"
+                className="material-symbols-outlined  cursor-pointer"
                 onClick={() => setOpen(!open)}
               >
                 more_horiz
               </span>
             )}
             {open && (
-              <div className="w-52 bg-zinc-50 rounded-lg absolute z-50 right-0 top-10 overflow-hidden cursor-pointer shadow-lg">
+              <div className="w-52 bg-zinc-50 dark:bg-zinc-900 rounded-lg absolute z-50 right-0 top-10 overflow-hidden cursor-pointer shadow-lg">
                 <Link to={`/edit-post/${post.$id}`}>
-                  <div className="px-5 py-3 hover:bg-neutral-100 hover:font-medium">
+                  <div className="px-5 py-3 hover:bg-neutral-100 hover:dark:bg-neutral-700 hover:font-medium">
                     Edit
                   </div>
                 </Link>
                 <hr />
                 <div
-                  className="px-5 py-3 block text-red-500 hover:bg-neutral-100 hover:font-medium"
+                  className="px-5 py-3 block text-red-500 hover:bg-neutral-100 hover:dark:bg-neutral-700 hover:font-medium"
                   onClick={deletePost}
                 >
                   Delete

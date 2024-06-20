@@ -6,7 +6,6 @@ const Loading = ({ loading }) => {
 
   // whenever loading comes true, we wish to show the loading page for at least 2 sec
   useEffect(() => {
-    console.log(1);
     if (loading) {
       setLoad(true);
     }

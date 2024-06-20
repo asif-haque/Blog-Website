@@ -21,7 +21,7 @@ export default function PostCard({
       <div className="flex gap-3 border-b pb-7 md:pb-10">
         <div className="flex-[1.75]">
           <h2 className="text-2xl font-extrabold mb-2">{title}</h2>
-          <div className="line-clamp-2 md:line-clamp-3 mb-5 text-neutral-600 text-sm">
+          <div className="line-clamp-2 md:line-clamp-3 mb-5 text-neutral-600 dark:text-neutral-400 text-sm">
             {convert(content)}
           </div>
           <div className="flex items-center gap-1">

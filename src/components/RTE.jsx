@@ -4,9 +4,15 @@ import { Controller } from "react-hook-form";
 
 // to take control of the Editor field, Controller component of react hook form is used. forwardRef could be used
 
-export default function RTE({ label, name, control, defaultValue = "" }) {
+export default function RTE({
+  label,
+  name,
+  control,
+  defaultValue = "",
+  classnames = "",
+}) {
   return (
-    <div className="w-full">
+    <div className={`w-full ${classnames}`}>
       {label && <label className="inline-block mb-1 pl-1">{label}</label>}
 
       <Controller

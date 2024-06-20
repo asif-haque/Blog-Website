@@ -6,12 +6,12 @@ import { CiSearch } from "react-icons/ci";
 import { LuSearch } from "react-icons/lu";
 
 const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
-  // console.log(window.location);
+
   return (
     <div>
       {/* Nav Box */}
       <ul
-        className={`md:hidden fixed z-[100] bottom-0 bg-neutral-100 shadow w-full ${
+        className={`lg:hidden fixed z-[100] bottom-0 bg-neutral-100 dark:bg-neutral-900 shadow w-full ${
           isOpenNav ? `translate-y-0` : `translate-y-full`
         } transition-all duration-200`}
         onClick={(e) => e.stopPropagation()}
@@ -38,11 +38,11 @@ const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
 
       {/* Bottom Bar */}
       {authStatus && (
-        <div className="md:hidden bg-neutral-200 w-full h-12 fixed bottom-0 z-[80] flex justify-center">
+        <div className="lg:hidden bg-neutral-200 dark:bg-neutral-900 w-full h-12 md:h-16 fixed bottom-0 z-[80] flex justify-center">
           <div className="m-auto">
             <NavLink to="/">
-              {location.pathname === "/" ? (
-                <GoHomeFill className="text-2xl" />
+              {window.location.pathname === "/" ? (
+                <GoHomeFill className="text-2xl dark:text-white" />
               ) : (
                 <GoHome className="text-2xl" />
               )}
@@ -50,8 +50,8 @@ const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
           </div>
           <div className="m-auto">
             <NavLink to="/all-posts">
-              {location.pathname === "/all-posts" ? (
-                <LuSearch className="text-2xl" />
+              {window.location.pathname === "/all-posts" ? (
+                <LuSearch className="text-2xl dark:text-white" />
               ) : (
                 <CiSearch className="text-2xl" />
               )}

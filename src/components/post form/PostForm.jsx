@@ -9,6 +9,7 @@ import Button from "../Button";
 import { appWriteService } from "../../appwrite/appwriteService";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const message = "Required Field!";
 
@@ -29,7 +30,8 @@ export default function PostForm({ post }) {
         .trim()
         .toLowerCase()
         .replace(/[^a-zA-Z\d\s]+/g, "-")
-        .replace(/\s/g, "-");
+        .replace(/\s/g, "-")
+        .concat(`-${crypto.randomUUID().split("-")[0]}`);
     }
     return "";
   };
@@ -63,7 +65,10 @@ export default function PostForm({ post }) {
           userName: userData.name,
           status: data.status === "active" ? true : false,
         });
-        dbPost && navigate(`/post/${dbPost.$id}`);
+        if (dbPost) {
+          navigate(`/post/${dbPost.$id}`);
+          toast.success("Post added.");
+        }
       } else {
         // Edit Form
         // upload new image
@@ -82,21 +87,22 @@ export default function PostForm({ post }) {
         });
 
         if (dbPost) {
-          console.log("Reached");
           navigate(`/post/${dbPost.$id}`);
+          toast.success("Post edited.");
         }
       }
     } catch (err) {
-      console.log("Error in creating or updating post : ", err);
+      console.log("Error in creating or updating post", err);
+      toast(err.message);
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-        <div className="w-2/3 px-2">
+    <div className="pb-[10vh]">
+      <form onSubmit={handleSubmit(submit)} className="md:flex flex-wrap">
+        <div className="md:w-2/3 px-3">
           <Input
-            label="Title : "
+            label="Title"
             placeholder="Title"
             className="mb-4"
             {...register("title", {
@@ -105,7 +111,7 @@ export default function PostForm({ post }) {
           />
 
           <Input
-            label="Slug : "
+            label="Slug"
             placeholder="Slug"
             className="mb-4"
             {...register("slug", {
@@ -122,17 +128,18 @@ export default function PostForm({ post }) {
           />
 
           <RTE
-            label="Content : "
+            label="Content"
             name="content"
             control={control} // there's no register, so we're using control
             // defaultValue={post?.content || ""} could use this
             defaultValue={getValues("content")}
+            classnames="mb-4 md:m-0"
           />
         </div>
-        <div className="w-1/3 px-2">
+        <div className="md:w-1/3 px-3">
           {/* image */}
           <Input
-            label="Featured Image : "
+            label="Featured Image"
             type="file"
             className="mb-4"
             accept="image/png, image/jpg, image/jpeg, image/gif"
@@ -151,7 +158,7 @@ export default function PostForm({ post }) {
           {/* active status */}
           <Select
             options={["active", "inactive"]}
-            label="Status : "
+            label="Status"
             className="mb-4"
             {...register("status", { required: { value: true, message } })}
           />

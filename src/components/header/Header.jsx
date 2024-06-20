@@ -8,6 +8,7 @@ import "./Header.css";
 import { RxHamburgerMenu } from "react-icons/rx";
 import SearchBar from "./SearchBar";
 import MobileNav from "./MobileNav";
+import MyDarkModeButton from "../MyDarkModeButton";
 
 export default function Header() {
   const [show, setShow] = useState(true);
@@ -63,8 +64,8 @@ export default function Header() {
     <>
       <header
         className={`py-3 bg-[rgba(255,255,255,0.3)] backdrop-blur-sm fixed z-50 w-full top-0 ${
-          show === false && `hide`
-        } border-b`}
+          !show && `hide`
+        } border-b dark:bg-[#141414] dark:border-0`}
       >
         <Container>
           <nav className="flex items-center px-2">
@@ -82,39 +83,42 @@ export default function Header() {
               />
             )}
             {/* Nav */}
-            <ul className="hidden md:flex items-center ml-auto gap-10">
-              {navItems.map(
-                (item) =>
-                  item.show && (
-                    <li key={item.name}>
-                      <NavLink
-                        to={item.url}
-                        className="py-2 flex justify-center items-center opacity-70 hover:opacity-100"
-                      >
-                        {item.name === "Write" && (
-                          <span className="material-symbols-outlined mr-2">
-                            edit_square
-                          </span>
-                        )}
-                        {item.name}
-                      </NavLink>
-                    </li>
-                  )
-              )}
-              {authStatus && (
-                <li>
-                  <Logoutbtn /> {/* as this has no url, written seperately */}
-                </li>
-              )}
-            </ul>
-            {/* for mobile */}
-            <RxHamburgerMenu
-              className="md:hidden text-3xl ml-auto mr-2"
-              onClick={(e) => {
-                setIsOpenNav(!isOpenNav);
-                e.stopPropagation();
-              }}
-            />
+            <div className="ml-auto flex gap-5 md:gap-10">
+              <MyDarkModeButton />
+              <ul className="hidden lg:flex items-center gap-10">
+                {navItems.map(
+                  (item) =>
+                    item.show && (
+                      <li key={item.name}>
+                        <NavLink
+                          to={item.url}
+                          className="py-2 flex justify-center items-center opacity-70 hover:opacity-100"
+                        >
+                          {item.name === "Write" && (
+                            <span className="material-symbols-outlined mr-2">
+                              edit_square
+                            </span>
+                          )}
+                          {item.name}
+                        </NavLink>
+                      </li>
+                    )
+                )}
+                {authStatus && (
+                  <li>
+                    <Logoutbtn /> {/* as this has no url, written seperately */}
+                  </li>
+                )}
+              </ul>
+              {/* for mobile */}
+              <RxHamburgerMenu
+                className="lg:hidden text-3xl ml-auto mr-2"
+                onClick={(e) => {
+                  setIsOpenNav(!isOpenNav);
+                  e.stopPropagation();
+                }}
+              />
+            </div>
           </nav>
         </Container>
       </header>

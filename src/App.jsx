@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { authService } from "./appwrite/authService";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import { useDispatch } from "react-redux";
-import { login, logout } from "./redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "./redux/features/authSlice";
 // import Login from "./components/Login";
 import { Route, Routes } from "react-router-dom";
 import Protected from "./components/Protected";
@@ -16,6 +16,7 @@ import EditPost from "./pages/EditPost";
 import Post from "./pages/Post";
 import Loading from "./components/Loading";
 import Search from "./pages/Search";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   /* fetching data: 
@@ -24,6 +25,7 @@ function App() {
       3. for loading, gotta use useState 
   */
   const [loading, setLoading] = useState(true);
+  const isDark = useSelector((state) => state.theme.isDark);
   const dispatch = useDispatch();
 
   // calling for userData
@@ -41,12 +43,24 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div
+      className={`min-h-screen ${
+        isDark && `dark`
+      } dark:bg-[#282828] dark:text-white`}
+    >
       <Loading loading={loading} />
 
       <header>
         <Header />
-        <div className="h-[11vh]"></div>
+        <div className="h-[4.5rem]"></div>
+        <Toaster
+          toastOptions={{
+            style: {
+              position: "relative",
+              top: "12vh",
+            },
+          }}
+        />
       </header>
 
       <Routes>

@@ -5,6 +5,7 @@ import PostCard from "../components/PostCard";
 import Container from "../components/container/Container";
 import PostCardShimmer from "../components/PostCardShimmer";
 import { useSearchParams } from "react-router-dom";
+import CreatePostButton from "../components/CreatePostButton";
 
 function AllPosts({ searchTerm = "" }) {
   const [posts, setposts] = useState();
@@ -37,6 +38,7 @@ function AllPosts({ searchTerm = "" }) {
               </div>
             ))}
           </div>
+          <CreatePostButton />
         </Container>
       </div>
     ) : (
@@ -55,7 +57,7 @@ function AllPosts({ searchTerm = "" }) {
     )
   ) : (
     // Loading to fetch posts
-    <div className="w-full py-8 px-[13vw]">
+    <div className="w-full py-8 px-5 md:px-[13vw]">
       <Container>
         <div className="space-y-5">
           {loading.map((num) => (

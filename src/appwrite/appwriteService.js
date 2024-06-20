@@ -39,8 +39,9 @@ class Service {
         }
       );
       return user;
-    } catch (err) {
+    } catch (error) {
       console.log("Error creating user in UserInfo collection: ", err);
+      throw error;
     }
   }
 
@@ -70,6 +71,7 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite :: createPost :: error : ", error);
+      throw error;
     }
   }
 
@@ -83,7 +85,7 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite :: getPost :: error : ", error);
-      return false;
+      throw error;
     }
   }
 
@@ -121,6 +123,7 @@ class Service {
       }
     } catch (error) {
       console.log("Error fetching documents : ", error);
+      throw error;
     }
   }
 
@@ -136,6 +139,7 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite :: updatePost :: error : ", error);
+      throw error;
     }
   }
 
@@ -149,7 +153,7 @@ class Service {
       return true; // manual return
     } catch (error) {
       console.log("Appwrite :: deletePost :: error : ", error);
-      return false;
+      throw error;
     }
   }
 
@@ -164,7 +168,7 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite :: uploadFile :: error : ", error);
-      return false;
+      throw error;
     }
   }
 
@@ -174,7 +178,7 @@ class Service {
       return true;
     } catch (error) {
       console.log("Appwrite :: deleteTheFile :: error : ", error);
-      return false;
+      throw error;
     }
   }
 
