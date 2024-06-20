@@ -39,7 +39,7 @@ export default function SignupComponent() {
   return (
     // <div className="flex items-center justify-center">
     <div
-      className={`m-auto w-full max-w-lg bg-neutral-200 dark:bg-neutral-900 md:rounded-xl p-5 border border-black/10 dark:md:border-white/20`}
+      className={`m-auto w-full max-w-lg dark:bg-neutral-900 md:rounded-xl p-5 border border-black/10 dark:md:border-white/20`}
     >
       <div className="mb-2 flex justify-center">
         <div className="w-[80px] h-[80px] rounded-full overflow-hidden">

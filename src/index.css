@@ -9,8 +9,8 @@
 }
 
 a:hover {
-  border-bottom: 1px solid black;
-  transition: all 0.2s ease-in-out;
+  border-bottom: 1px solid;
+  transition: all 0.3s ease-in-out;
 }
 
 /* had to include here due to get recognized by react router dom [for NavLink] */

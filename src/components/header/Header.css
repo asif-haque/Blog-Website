@@ -1,11 +1,11 @@
 nav a:hover {
   box-shadow: rgba(0, 0, 0, 0.45) 0px 20px 20px -20px;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid;
   transition: all -1s;
 }
 
 .active {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid;
 }
 
 @media (max-width: 1024px) {
