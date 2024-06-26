@@ -44,9 +44,13 @@ export default function Header() {
   }, [location.href]);
 
   // mobile nav close
-  window.addEventListener("click", () => {
+  const handleCloseNav = () => {
     setIsOpenNav(false);
-  });
+  };
+  useEffect(() => {
+    window.addEventListener("click", handleCloseNav);
+    return () => window.removeEventListener("click", handleCloseNav);
+  }, []);
 
   //  we want to show the bar whenever scrolling up
   let oldScrollY = window.scrollY;
