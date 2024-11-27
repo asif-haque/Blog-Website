@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { authService } from "./appwrite/authService";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
@@ -7,16 +7,28 @@ import { login, logout } from "./redux/features/authSlice";
 // import Login from "./components/Login";
 import { Route, Routes } from "react-router-dom";
 import Protected from "./components/Protected";
-import Home from "./pages/Home";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import AllPosts from "./pages/AllPosts";
-import AddPost from "./pages/AddPost";
-import EditPost from "./pages/EditPost";
-import Post from "./pages/Post";
-import Loading from "./components/Loading";
-import Search from "./pages/Search";
 import toast, { Toaster } from "react-hot-toast";
+// import Home from "./pages/Home";
+// import Signup from "./pages/Signup";
+// import Login from "./pages/Login";
+// import AllPosts from "./pages/AllPosts";
+// import AddPost from "./pages/AddPost";
+// import EditPost from "./pages/EditPost";
+// import Post from "./pages/Post";
+// import Search from "./pages/Search";
+import Loading from "./components/loaders/Loading";
+import RouteLoader from "./components/loaders/RouteLoader";
+import Profile from "./pages/Profile";
+import { appWriteService } from "./appwrite/appwriteService";
+
+const Home = lazy(() => import("./pages/Home"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Login = lazy(() => import("./pages/Login"));
+const AllPosts = lazy(() => import("./pages/AllPosts"));
+const AddPost = lazy(() => import("./pages/AddPost"));
+const EditPost = lazy(() => import("./pages/EditPost"));
+const Post = lazy(() => import("./pages/Post"));
+const Search = lazy(() => import("./pages/Search"));
 
 function App() {
   /* fetching data: 
@@ -30,16 +42,21 @@ function App() {
 
   // calling for userData
   useEffect(() => {
-    authService
-      .getAccount()
-      .then((userData) => {
-        if (userData) {
-          dispatch(login({ userData })); // i.e. my setData()
-        } else {
-          dispatch(logout()); // if the user not found, stay logged out
-        }
-      })
-      .finally(() => setLoading(false));
+    async function getActiveUser() {
+      setLoading(true);
+      try {
+        const activeUserData = await authService.getAccount();
+        console.log("activeUserData : ", activeUserData);
+        console.log(await appWriteService.getUserInfo(activeUserData.$id));
+        activeUserData ? dispatch(login(activeUserData)) : dispatch(logout());
+      } catch (err) {
+        dispatch(logout());
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getActiveUser();
   }, []);
 
   return (
@@ -63,67 +80,75 @@ function App() {
         />
       </header>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/login"
-          element={
-            <Protected authentication={false}>
-              <Login />
-            </Protected>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <Protected authentication={false}>
-              <Signup />
-            </Protected>
-          }
-        />
-        <Route
-          path="/all-posts"
-          element={
-            <Protected authentication>
-              <AllPosts />
-            </Protected>
-          }
-        />
-        <Route
-          path="/add-post"
-          element={
-            <Protected authentication>
-              <AddPost />
-            </Protected>
-          }
-        />
-        <Route
-          path="/edit-post/:slug"
-          element={
-            <Protected authentication>
-              <EditPost />
-            </Protected>
-          }
-        />
-        <Route
-          path="/post/:slug"
-          element={
-            <Protected authentication>
+      <Suspense fallback={``}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/login"
+            element={
+              <Protected authentication={false}>
+                <Login />
+              </Protected>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Protected authentication={false}>
+                <Signup />
+              </Protected>
+            }
+          />
+          <Route
+            path="/all-posts"
+            element={
+              <Protected authentication>
+                <AllPosts />
+              </Protected>
+            }
+          />
+          <Route
+            path="/add-post"
+            element={
+              <Protected authentication>
+                <AddPost />
+              </Protected>
+            }
+          />
+          <Route
+            path="/edit-post/:slug"
+            element={
+              <Protected authentication>
+                <EditPost />
+              </Protected>
+            }
+          />
+          <Route
+            path="/post/:slug"
+            element={
+              // <Protected authentication>
               <Post />
-              {/* But I want someone to read a blog with or without authentication */}
-            </Protected>
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <Protected authentication>
-              <Search />
-              {/* But I want someone to read a blog with or without authentication */}
-            </Protected>
-          }
-        />
-      </Routes>
+              // </Protected>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <Protected authentication>
+                <Search />
+              </Protected>
+            }
+          />
+          <Route
+            path="/user/:id"
+            element={
+              // <Protected authentication>
+              <Profile />
+              // </Protected>
+            }
+          />
+        </Routes>
+      </Suspense>
     </div>
   );
 }
