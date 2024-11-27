@@ -40,7 +40,36 @@ class Service {
       );
       return user;
     } catch (error) {
-      console.log("Error creating user in UserInfo collection: ", err);
+      console.log("Error creating user in UserInfo collection: ", error);
+      throw error;
+    }
+  }
+
+  async updateUserInfo(id, { name, myPosts, bookmarkedPosts, email }) {
+    try {
+      return await this.databases.updateDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionUserInfoId,
+        id,
+        { name, myPosts, bookmarkedPosts, email },
+        [Permission.update(Role.any())]
+      );
+    } catch (error) {
+      console.log("Appwrite :: updateUserInfo :: error : ", error);
+      throw error;
+    }
+  }
+
+  async getUserInfo(id) {
+    try {
+      return await this.databases.getDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionUserInfoId,
+        // [Query.equal("$id", id)]
+        id
+      );
+    } catch (error) {
+      console.log("Appwrite :: getUserInfo :: error : ", error);
       throw error;
     }
   }
@@ -56,7 +85,7 @@ class Service {
     userName,
   }) {
     try {
-      return await this.databases.createDocument(
+      const post = await this.databases.createDocument(
         config.appwriteDatabaseId,
         config.appwriteCollectionId,
         slug,
@@ -97,29 +126,41 @@ class Service {
         return await this.databases.listDocuments(
           config.appwriteDatabaseId,
           config.appwriteCollectionId,
-          [Query.equal("status", [true])]
+          [Query.equal("status", [true]), Query.orderDesc("$createdAt")]
         );
       else {
         const docsWithTitle = await this.databases.listDocuments(
           config.appwriteDatabaseId,
           config.appwriteCollectionId,
-          [Query.equal("status", true), Query.search("title", searchTerm)]
+          [
+            Query.equal("status", true),
+            Query.search("title", searchTerm),
+            Query.orderDesc("$createdAt"),
+          ]
         );
         const docsWithAuthor = await this.databases.listDocuments(
           config.appwriteDatabaseId,
           config.appwriteCollectionId,
-          [Query.equal("status", true), Query.search("userName", searchTerm)]
+          [
+            Query.equal("status", true),
+            Query.search("userName", searchTerm),
+            Query.orderDesc("$createdAt"),
+          ]
         );
+
         const docs = {
           total: 0,
           documents: [],
         };
-        docs.total = docsWithAuthor.total + docsWithTitle.total;
-        docs.documents = [
-          ...docsWithTitle.documents,
-          ...docsWithAuthor.documents,
-        ];
-        return docs; // JUST BECAUSE F-ING Query.or([]) DOESN'T WORK WITH APPWRITE
+        // merging the result : title prioritized
+        docsWithAuthor.documents?.forEach((el) => {
+          if (!docsWithTitle.documents.some((el2) => el2.$id === el.$id)) {
+            docsWithTitle.documents.push(el);
+          }
+        });
+        docs.total = docsWithTitle.documents.length;
+        docs.documents = docsWithTitle.documents;
+        return docs;
       }
     } catch (error) {
       console.log("Error fetching documents : ", error);

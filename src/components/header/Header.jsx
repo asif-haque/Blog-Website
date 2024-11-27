@@ -14,16 +14,17 @@ export default function Header() {
   const [show, setShow] = useState(true);
   const [isOpenNav, setIsOpenNav] = useState(false);
   const [search, setSearch] = useState("");
-  const authStatus = useSelector((state) => state.auth.status);
+  const { loginStatus, activeUserData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const inputRef = useRef();
 
   const navItems = [
     { name: "Home", url: "/", show: true },
-    { name: "Login", url: "/login", show: !authStatus },
-    { name: "Sign Up", url: "/signup", show: !authStatus },
-    { name: "All Posts", url: "/all-posts", show: authStatus },
-    { name: "Write", url: "/add-post", show: authStatus },
+    { name: "Login", url: "/login", show: !loginStatus },
+    { name: "Sign Up", url: "/signup", show: !loginStatus },
+    { name: "All Posts", url: "/all-posts", show: loginStatus },
+    { name: "Write", url: "/add-post", show: loginStatus },
+    { name: "Profile", url: `/user/${activeUserData?.$id}`, show: loginStatus },
   ];
 
   const handleSearch = async (e) => {
@@ -78,7 +79,7 @@ export default function Header() {
               <Logo width="70px" />
             </div>
             {/* Search Bar */}
-            {authStatus && (
+            {loginStatus && (
               <SearchBar
                 handleSearch={handleSearch}
                 search={search}
@@ -108,7 +109,7 @@ export default function Header() {
                       </li>
                     )
                 )}
-                {authStatus && (
+                {loginStatus && (
                   <li>
                     <Logoutbtn /> {/* as this has no url, written seperately */}
                   </li>
@@ -131,7 +132,7 @@ export default function Header() {
       <MobileNav
         isOpenNav={isOpenNav}
         navItems={navItems}
-        authStatus={authStatus}
+        loginStatus={loginStatus}
       />
     </>
   );

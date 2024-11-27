@@ -21,6 +21,8 @@ export default function Post() {
   const { slug } = useParams();
   const navigate = useNavigate();
 
+  let writer;
+
   // closing the modal
   const handleModalClose = () => {
     setOpen(false);
@@ -30,28 +32,44 @@ export default function Post() {
     return () => window.removeEventListener("click", handleModalClose);
   }, []);
 
-  // asking for the post details
+  // asking for the post details and the writer
   useEffect(() => {
-    appWriteService.getPost(slug).then((post) => {
-      post ? setPost(post) : navigate("/");
-      // checking (on mounting) if post is already liked by the current user
-      if (post?.likes.includes(userData?.$id)) {
-        setIsPostLiked(true);
+    (async () => {
+      try {
+        const res = await appWriteService.getPost(slug);
+        if (res) {
+          setPost(res);
+          if (res.likes.includes(activeUserData?.$id)) {
+            setIsPostLiked(true);
+          }
+          try {
+            writer = await appWriteService.getUserInfo(res.userId);
+            console.log("Writer is", writer);
+          } catch (err) {
+            console.log("Writer not found at Post.jsx: ", err);
+          }
+        } else {
+          navigate("/");
+        }
+      } catch (err) {
+        toast.error("Post not found");
+        console.log(err);
+        navigate("/");
       }
-    });
+    })();
   }, [slug, navigate]);
 
   // read time calculation on mount
   useEffect(() => {
-    if (post && post.content) {
+    if (post) {
       const t = readCount(post.content);
       setReadTime(t);
     }
   }, [post]);
 
   // checking if the post is of user themselves
-  const userData = useSelector((state) => state.auth.userData);
-  const isAuthor = post && userData ? post.userId === userData.$id : false;
+  const { activeUserData, loginStatus } = useSelector((state) => state.auth);
+  const isAuthor = post && activeUserData ? post.userId === activeUserData.$id : false;
 
   const deletePost = async () => {
     try {
@@ -69,25 +87,29 @@ export default function Post() {
   };
 
   const handleLike = async () => {
-    try {
-      // if the likes doesn't contain current user yet, then add a like
-      if (!post.likes.includes(userData.$id)) {
-        setIsPostLiked(true);
-        const updatedPost = await appWriteService.updatePost(post.$id, {
-          likes: [...post.likes, userData.$id],
-        });
-        setPost(updatedPost);
-      } else {
-        // we'll need to unlike
-        setIsPostLiked(false);
-        const newLikes = post.likes.filter((id) => id !== userData.$id);
-        const updatedPost = await appWriteService.updatePost(post.$id, {
-          likes: newLikes,
-        });
-        setPost(updatedPost);
+    if (loginStatus) {
+      try {
+        // if the likes doesn't contain current user yet, then add a like
+        if (!post.likes.includes(activeUserData.$id)) {
+          setIsPostLiked(true);
+          const updatedPost = await appWriteService.updatePost(post.$id, {
+            likes: [...post.likes, activeUserData.$id],
+          });
+          setPost(updatedPost);
+        } else {
+          // we'll need to unlike
+          setIsPostLiked(false);
+          const newLikes = post.likes.filter((id) => id !== activeUserData.$id);
+          const updatedPost = await appWriteService.updatePost(post.$id, {
+            likes: newLikes,
+          });
+          setPost(updatedPost);
+        }
+      } catch (err) {
+        console.log("Error liking: ", err);
       }
-    } catch (err) {
-      console.log("Error liking: ", err);
+    } else {
+      navigate("/login");
     }
   };
 
@@ -100,7 +122,7 @@ export default function Post() {
       <div className="post-info mb-5 flex gap-2">
         <div className="w-[3rem]">
           <img
-            src="/images/userWithoutDp.png"
+            src={writer?.pfp || "/images/userWithoutDp.png"}
             className="size-full object-contain"
             alt=""
           />

@@ -9,22 +9,25 @@ import CreatePostButton from "../components/CreatePostButton";
 
 function AllPosts({ searchTerm = "" }) {
   const [posts, setposts] = useState();
-  const loading = [1, 2, 3, 4, 5];
+  const [loading, setLoading] = useState(false);
+  const loaders = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     const fn = async () => {
+      setLoading(true);
       const documentList = await appWriteService.getPosts(searchTerm);
       documentList && setposts(documentList.documents);
+      setLoading(false);
     };
     fn();
   }, [searchTerm]);
 
   // loading posts
-  if (!posts)
+  if (loading)
     return (
       <div className="w-full py-8 px-5 md:px-[13vw]">
         <div className="space-y-5">
-          {loading.map((num) => (
+          {loaders.map((num) => (
             <div key={num} className="">
               <PostCardShimmer />
             </div>
@@ -33,7 +36,7 @@ function AllPosts({ searchTerm = "" }) {
       </div>
     );
 
-  return posts.length ? (
+  return posts?.length ? (
     <div className="w-full py-8 px-4 md:px-[13vw]">
       {searchTerm && (
         <>
@@ -44,7 +47,7 @@ function AllPosts({ searchTerm = "" }) {
         </>
       )}
       <div className="space-y-5">
-        {posts.toReversed().map((post, index) => (
+        {posts.map((post, index) => (
           <div key={post.$id} className="">
             <PostCard {...post} lastIndex={index === posts.length - 1} />
           </div>

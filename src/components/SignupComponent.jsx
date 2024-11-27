@@ -24,11 +24,11 @@ export default function SignupComponent() {
     try {
       const session = await authService.signUp(data);
       if (session) {
-        const userData = await authService.getAccount();
-        if (userData) {
-          dispatch(login(userData));
+        const activeUserData = await authService.getAccount();
+        if (activeUserData) {
+          dispatch(login(activeUserData));
           navigate("/");
-          toast(`Welcome ${userData.name} 👋`);
+          toast(`Welcome ${activeUserData.name} 👋`);
         }
       }
     } catch (error) {

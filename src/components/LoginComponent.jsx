@@ -27,11 +27,11 @@ export default function LoginComponent() {
       const session = await authService.login(data); // session is the token, not userData
       // 2. Get the userdata and dispatch to the store and get them on home page
       if (session) {
-        const userData = await authService.getAccount();
-        if (userData) {
-          dispatch(login(userData));
+        const activeUserData = await authService.getAccount();
+        if (activeUserData) {
+          dispatch(login(activeUserData));
           navigate("/");
-          toast.success(`Welcome back ${userData.name} 🤝`);
+          toast.success(`Welcome back ${activeUserData.name} 🤝`);
         }
       }
     } catch (error) {

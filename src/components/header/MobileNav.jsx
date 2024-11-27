@@ -5,7 +5,7 @@ import { GoHome, GoHomeFill } from "react-icons/go";
 import { CiSearch } from "react-icons/ci";
 import { LuSearch } from "react-icons/lu";
 
-const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
+const MobileNav = ({ isOpenNav, navItems,  loginStatus }) => {
 
   return (
     <div>
@@ -29,7 +29,7 @@ const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
               </li>
             )
         )}
-        {authStatus && (
+        {loginStatus && (
           <li className="py-4 flex justify-center items-center">
             <LogoutBtn /> {/* as this has no url, written seperately */}
           </li>
@@ -37,7 +37,7 @@ const MobileNav = ({ isOpenNav, navItems, authStatus }) => {
       </ul>
 
       {/* Bottom Bar */}
-      {authStatus && (
+      {loginStatus && (
         <div className="lg:hidden bg-neutral-200 dark:bg-neutral-900 w-full h-12 md:h-16 fixed bottom-0 z-[80] flex justify-center">
           <div className="m-auto">
             <NavLink to="/">

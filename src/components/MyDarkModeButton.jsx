@@ -8,7 +8,6 @@ const MyDarkModeButton = () => {
   const dispatch = useDispatch();
   const toggleDarkMode = () => {
     dispatch(toggleTheme());
-    console.log("tapped");
   };
 
   return (

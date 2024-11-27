@@ -1,7 +1,7 @@
 // form to create a post OR edit an existing post
 // featuredImg
 import Input from "../Input";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import RTE from "../RTE";
 import Select from "../Select";
@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 export const message = "Required Field!";
 
 export default function PostForm({ post }) {
+  const [loading, setLoading] = useState(false);
   const { register, setValue, watch, control, getValues, handleSubmit } =
     useForm({
       defaultValues: {
@@ -30,8 +31,7 @@ export default function PostForm({ post }) {
         .trim()
         .toLowerCase()
         .replace(/[^a-zA-Z\d\s]+/g, "-")
-        .replace(/\s/g, "-")
-        .concat(`-${crypto.randomUUID().split("-")[0]}`);
+        .replace(/\s/g, "-");
     }
     return "";
   };
@@ -51,6 +51,8 @@ export default function PostForm({ post }) {
   const userData = useSelector((state) => state.auth.userData);
   const navigate = useNavigate();
   const submit = async (data) => {
+    setLoading(true);
+    data.slug = data.slug.concat(`-${crypto.randomUUID().split("-")[0]}`);
     try {
       if (!post) {
         // upload image to storage
@@ -95,6 +97,7 @@ export default function PostForm({ post }) {
       console.log("Error in creating or updating post", err);
       toast(err.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -165,7 +168,7 @@ export default function PostForm({ post }) {
           {/* <Input /> to add topics */}
           {/* submit button */}
           <Button type="submit" className="w-full">
-            {post ? `Update` : `Submit`}
+            {loading ? `Loading...` : post ? `Update` : `Submit`}
           </Button>
         </div>
       </form>

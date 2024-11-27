@@ -46,8 +46,6 @@ function App() {
       setLoading(true);
       try {
         const activeUserData = await authService.getAccount();
-        console.log("activeUserData : ", activeUserData);
-        console.log(await appWriteService.getUserInfo(activeUserData.$id));
         activeUserData ? dispatch(login(activeUserData)) : dispatch(logout());
       } catch (err) {
         dispatch(logout());

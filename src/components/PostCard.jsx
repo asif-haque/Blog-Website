@@ -30,14 +30,14 @@ export default function PostCard({
             {convert(content)}
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-[1.5rem]">
+            {/* <div className="w-[1.5rem]">
               <img
                 src="/images/userWithoutDp.png"
                 className="size-full object-contain"
                 alt=""
               />
-            </div>
-            <h3 className="text-md ml-2">{userName}</h3>
+            </div> */}
+            <h3 className="text-md">{userName}</h3>
             <LuDot className="opacity-70" />
             <div className="text-sm opacity-70">
               {readCount(content)} min read
